@@ -1,0 +1,33 @@
+{
+	"name": "GeeClass Extractor",
+	"short_name": "GCExtractor",
+	"version": "0.0.1",
+	"manifest_version": 2,
+	"description": "极课提取器，尝试提取极课所能提取到的信息，包括学校、年级、班级、学生和各科错题等……",
+	"icons": {
+		"16": "img/icon/16.png",
+		"24": "img/icon/24.png",
+		"32": "img/icon/32.png",
+		"48": "img/icon/48.png"
+	},
+	/*"default_locale": "zh",*/
+	"browser_action": {
+		"default_icon": "img/icon/32.png",
+		"default_title": "WebMP 0.28",
+		"default_popup": "web/popup.htm"
+	},
+	"homepage_url": "https://pwcq.dev/",
+	"permissions": [
+		"cookies", "http://*/*", "https://*/*", "http://localhost/*", "tabs", "activeTab", "background", "webNavigation", "downloads"
+	],
+	"content_scripts": [
+		{
+			"matches": ["*://teacher.fclassroom.com/", "*://teacher.fclassroom.com/*"],
+			"js": ["js/injector.js"]
+		}
+	],
+	"background": {
+		"scripts": ["js/background.js"],
+		"persistent": true
+	}
+}

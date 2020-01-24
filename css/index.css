@@ -1,0 +1,145 @@
+body, div {
+	position: absolute;
+	margin: 0;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+div {
+	cursor: default;
+}
+
+div.sidebar {
+	left: 0;
+	top: 0;
+	width: 48px;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.1);
+}
+
+div.sidebar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div.sidebar ul li {
+	width: 48px;
+	height: 48px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 48px;
+	font-size: 36px;
+	cursor: default;
+}
+
+div.sidebar li img {
+	width: 32px;
+	height: 32px;
+	margin: 0;
+	filter: grayscale(100%);
+}
+
+div.sidebar li.active img {
+	filter: brightness(100%);
+}
+
+div.titlebar {
+	right: 0;
+	top: 0;
+	height: 32px;
+	font-size: 20px;
+	line-height: 32px;
+	vertical-align: middle;
+	padding-left: 8px;
+	background: rgba(0, 0, 0, 0.16);
+	color: #434343;
+}
+
+div.titlebar span#hint-status {
+	float: right;
+	margin-right: 8px;
+}
+
+@keyframes spinner {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+#load-spinner {
+	border: 4px solid rgba(0, 222, 0, 0.25);
+	border-top-color: #0d0;
+	border-radius: 12px;
+	width: 16px;
+	height: 16px;
+	position: initial;
+	display: inline-block;
+	margin-top: 4px;
+	animation: none;
+}
+#load-spinner.going {
+	border-color: rgba(255, 222, 0, 0.25);
+	border-top-color: #dd0;
+	animation: spinner 1s linear infinite;
+}
+#load-spinner.fail {
+	border-color: rgba(222, 0, 0, 0.25);
+	border-top-color: #d00;
+	animation: none;
+}
+
+div.interface {
+	bottom: 0;
+	right: 0;
+	width: 50%;
+	height: 50%;
+}
+
+div.fulltab, div.fulltab > div {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+table {
+	margin: auto;
+}
+table td {
+	font-size: 16px;
+	margin: -1px 0 -1px 0;
+	padding: 8px;
+	background: rgba(0, 0, 0, 0.1);/*
+		border-top: 1px solid #000;
+		border-bottom: 1px solid #000;*/
+}
+tbody > tr:hover {
+	background: rgba(0, 0, 0, 0.15);
+}
+tbody > tr:active, tbody >tr.active {
+	background: rgba(255, 255, 255, 0.5);
+	filter: invert(100%);
+}
+thead td {
+	font-weight: bold;
+}
+
+#box-hinttab {
+	position: fixed;
+	top: 145px;
+	left: 50px;
+	font-size: 18px;
+	line-height: 46px;
+	padding: 0 12px;
+	background: #eee;
+	border: 0px solid;
+	border-radius: 4px;
+	box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.36);
+}

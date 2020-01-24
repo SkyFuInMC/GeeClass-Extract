@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8" http-equiv="200" />
+	<title>极课提取主界面</title>
+	<script src="../js/gcinfo.js"></script>
+	<script src="../js/index.js"></script>
+	<link rel="stylesheet" href="../css/index.css" />
+</head>
+<body>
+	<div class="sidebar">
+		<ul>
+			<li><img src="../img/icom/account.svg"/></li>
+			<li><img src="../img/icom/class.svg"/></li>
+			<li><img src="../img/icom/student.svg"/></li>
+			<li><img src="../img/icom/list.svg"/></li>
+			<li><img src="../img/icom/analyze.svg"/></li>
+		</ul>
+	</div>
+	<div class="titlebar">极课提取 - <span id="hint-title">操作提示</span><span id="hint-status"><div id="load-spinner"></div></span></div>
+	<div class="interface">
+		<div class="fulltab">
+			<div id="accounts">
+				<table>
+					<thead><tr>
+						<td>帐号</td><td>帐户名</td><td>登录名</td><td>客户端</td><td>最后登录于</td><td>请求令牌</td>
+					</tr></thead>
+					<tbody id="list-account">
+					</tbody>
+				</table>
+			</div>
+			<div id="classes">
+				<table>
+					<thead><tr>
+						<td>年级</td><td>班级</td><td>角色</td><td>科目</td><td>学年</td><td>学校</td>
+					</tr></thead>
+					<tbody id="list-classes">
+					</tbody>
+				</table>
+			</div>
+			<div id="students">
+				<table>
+					<thead><tr>
+						<td>编码</td><td>姓名</td><td>极课号</td><td>操作</td>
+					</tr></thead>
+					<tbody id="list-student">
+					</tbody>
+				</table>
+				<div id="box-hinttab">看错题点左边按钮<br/>看分析点左边按钮</div>
+			</div>
+			<div id="questions">
+				<table>
+					<thead><tr>
+						<td>类型</td><td>试卷名称</td><td>分数</td><td>班级均分</td><td>制卷时间</td>
+					</tr></thead>
+					<tbody id="list-exam">
+					</tbody>
+				</table>
+			</div>
+			<div id="stats">
+			</div>
+		</div>
+		<div class="popup"></div>
+	</div>
+</body>

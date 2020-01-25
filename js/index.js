@@ -100,17 +100,47 @@ var selExmDisp = function (p, r) {
 					};
 					let ansImg = "";
 					if (e2.answerImage) {hasAns = 1; ansImg = e2.answerImage;};
-					let qImg = gcQiPath(e2.questionContent.txtPath);
+					let qImg = "";
+					if (e2.questionContent.imgPath != "") {
+						qImg = ('<img src="https://teacher.fclassroom.com/q_file' + e2.questionContent.imgPath + '" />');
+					} else {
+						qImg = '<div id="load-spinner" class="fail"></div>';
+					};
 					let newEl = document.createElement("tr");
-					newEl.innerHTML = wAlter('<td title="${qx}">${bi}、${si}</td><td>${as}/${qs}</td><td title="${ai}">${ha}</td><td><img src="${qi}" /></td>', {
-						bi: bigIdx, si: smallIdx, as: ags, qs: fqs, ai: ansImg, ha: [rans, "有"][hasAns], qi: qImg, qx: qid
+					newEl.innerHTML = wAlter('<td title="${qx}">${bi}、${si}</td><td>${as}/${qs}</td><td title="${ai}">${ha}</td><td>${qi}</td><td>${nt}</td><td>无</td>', {
+						bi: bigIdx, si: smallIdx, as: ags, qs: fqs, ai: ansImg, ha: [rans, "有"][hasAns], qi: qImg, qx: qid, nt: ['<div id="load-spinner" class="fail"></div>', '<div id="load-spinner" class="going"></div>'][hasAns]
 					});
+					if (hasAns == 1) {
+						getRaForQ(qid, selected.school);
+					};
 					picDet.appendChild(newEl);
 				});
 			});
 			p();
 		});
 	};
+};
+var getRaForQ = function (qid, sid) {
+	gcRqPath(sid, qid, reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((json) => {
+		let dpth, dhd, ddone = false;
+		if (json.data.length > 0) {
+			dpth = json.data[0].examQuestionAnswers[0].analysisCapture;
+			dhd = "https://image.fclassroom.com/";
+		};
+		Array.from(picDet.children).forEach((e) => {
+			if (!(ddone)) {
+				if (e.children[0].title == qid.toString()) {
+					ddone = true;
+					if (json.data.length > 0) {
+						e.children[4].innerHTML = wAlter('<img src="${p}" />', {p: (dhd + dpth)});
+						e.children[5].innerHTML = json.data[0].examQuestionAnswers[0].createUserName;
+					} else {
+						e.children[4].innerHTML = '<div id="load-spinner" class="fail"></div>';
+					};
+				};
+			};
+		});
+	}).catch(promiseError);
 };
 
 viewAction = [function (p, r) {

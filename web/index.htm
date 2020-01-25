@@ -9,11 +9,11 @@
 <body>
 	<div class="sidebar">
 		<ul>
-			<li><img src="../img/icom/account.svg"/></li>
-			<li><img src="../img/icom/class.svg"/></li>
-			<li><img src="../img/icom/student.svg"/></li>
-			<li><img src="../img/icom/list.svg"/></li>
-			<li><img src="../img/icom/analyze.svg"/></li>
+			<li><img title="选择用户" src="../img/icom/account.svg"/></li>
+			<li><img title="选择班级" src="../img/icom/class.svg"/></li>
+			<li><img title="选择学生" src="../img/icom/student.svg"/></li>
+			<li><img title="查看错题" src="../img/icom/list.svg"/></li>
+			<li><img title="查看分析" src="../img/icom/analyze.svg"/></li>
 		</ul>
 	</div>
 	<div class="titlebar">极课提取 - <span id="hint-title">操作提示</span><span id="hint-status"><div id="load-spinner"></div></span></div>
@@ -55,10 +55,33 @@
 					<tbody id="list-exam">
 					</tbody>
 				</table>
+				<div class="bottom-btns">
+					<img title="全部提取" id="btn-fsel" src="../img/icom/upload.svg" />
+					<img title="提取选中" id="btn-ssel" src="../img/icom/upload.svg" />
+				</div>
 			</div>
 			<div id="stats">
+				功能尚未完成，敬请期待！
 			</div>
 		</div>
-		<div class="popup"></div>
+		<div class="popup">
+			<div class="popup-background"></div>
+			<div class="popup-window" id="ext-selected">
+				<div class="popup-title"><span>提取的已选中试卷错题</span></div>
+				<div class="popup-content">
+					<table>
+						<thead><tr>
+							<td>题号</td><td>分数</td><td>答案</td><td>题目图片</td>
+						</tr></thead>
+						<tbody id="list-exmpic">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="popup-window" id="ext-all">
+				<div class="popup-title"><span>提取所有试卷错题</span></div>
+				<div class="popup-content"></div>
+			</div>
+		</div>
 	</div>
 </body>

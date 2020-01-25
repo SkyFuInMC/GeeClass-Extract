@@ -2,21 +2,31 @@
 "unsafe-inline";
 
 var promiseError = function (o) {
-	console.info(o.stack);
-	r();
+	spinner.className = "fail";
+	if (!(o)) {
+		console.info("Received a reject but no further information provided.");
+	} else {
+		console.info(o.stack);
+	};
+};
+var refuse = function (text = "No information provided.") {
+	throw(new Error(text));
 };
 
 var hints = {};
 hints.title = ["请选择账户", "请选择班级", "请选择学生再继续操作", "学生错题", "学生分析"];
 
-var sidebar, views, viewAction, viewTabs, accounts; //arrays
-var title, titleHint, fullTab, accountDet, classDet, stuDet, exmDet, spinner;//elements
-var tabActive, selected = {}, reqArgs = {};//root properties
+var sidebar, views, viewAction, viewTabs, accounts, bottomBtns; //arrays
+var title, titleHint, fullTab, accountDet, classDet, stuDet, exmDet, picDet, spinner;//elements
+var tabActive, selected = {}, reqArgs = {}, popup = {};//root properties
 
 var tabResizer = function () {
 	title.style.width = (self.innerWidth - 56).toString() + "px";
 	fullTab.style.width = (self.innerWidth - 48).toString() + "px";
 	fullTab.style.height = (self.innerHeight - 32).toString() + "px";
+	popup.windows.forEach((e) => {
+		e.winEl.style.height = (e.clientHeight - 24).toString() + "px";
+	});
 };
 var stuListDisp = function () {
 	stuDet.innerHTML = "";
@@ -32,6 +42,9 @@ var stuListDisp = function () {
 			});
 			this.className = "active";
 			selected.student = this.children[1].title;
+			selected.studentName = this.children[1].innerText;
+			selected.exmName = "";
+			selected.exmPaper = 0;
 			reqArgs.st = selected.student;
 		};
 		stuDet.appendChild(newEl);
@@ -49,10 +62,55 @@ var exmListDisp = function () {
 			});
 			this.className = "active";
 			selected.exmPaper = this.children[1].title;
+			selected.exmName = this.children[1].innerText;
 			reqArgs.ex = selected.exmPaper;
 		};
 		exmDet.appendChild(newEl);
 	});
+};
+var switchPopup = function (index) {
+	popup.windows.forEach((e) => {
+		e.title = "";
+	});
+	if (index > -1) {
+		popup.windows[index].title = "active";
+	};
+	tabResizer();
+};
+var selExmDisp = function (p, r) {
+	let curwin = popup.windows[0];
+	curwin.titleEl.innerText = wAlter("提取“${studentName}”的“${exmName}”错题", selected);
+	if (selected.exmName == "" || selected.exmName == undefined) {
+		refuse();
+	} else {
+		picDet.innerHTML = "";
+		gcget("stu-getonewrong", reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((json) => {
+			console.log(json);
+			json.data[0].questionList.forEach((e1) => {
+				let bigIdx = e1.questionTitle.replace("、", ".").replace(",", ".").split(".")[0];
+				e1.childrenList.forEach((e2) => {
+					let qid = e2.questionId;
+					let ags = e2.score;
+					let fqs = e2.questionScore;
+					let smallIdx = e2.questionTitle;
+					let hasAns = 0;
+					let rans = "无";
+					if (e2.answer) {
+						rans = e2.answer;
+					};
+					let ansImg = "";
+					if (e2.answerImage) {hasAns = 1; ansImg = e2.answerImage;};
+					let qImg = gcQiPath(e2.questionContent.txtPath);
+					let newEl = document.createElement("tr");
+					newEl.innerHTML = wAlter('<td title="${qx}">${bi}、${si}</td><td>${as}/${qs}</td><td title="${ai}">${ha}</td><td><img src="${qi}" /></td>', {
+						bi: bigIdx, si: smallIdx, as: ags, qs: fqs, ai: ansImg, ha: [rans, "有"][hasAns], qi: qImg, qx: qid
+					});
+					picDet.appendChild(newEl);
+				});
+			});
+			p();
+		});
+	};
 };
 
 viewAction = [function (p, r) {
@@ -146,7 +204,7 @@ viewAction = [function (p, r) {
 			selected.stuList.class = selected.class;
 			stuListDisp();
 			p();
-		});
+		}).catch(promiseError);
 	};
 	if (!(selected.stuList)) {
 		tUpdate();
@@ -161,11 +219,12 @@ viewAction = [function (p, r) {
 	};
 	reqArgs.pn = 1;
 	if (selected.student != selected.exmList.student) {
+		selected.exmList = [];
 		gcget("stu-exam", reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((examData) => {
-			var exmData = examData.data.list;
+			selected.exmList.splice(selected.exmList.length, 0, ...examData.data.list);
+		}).then(() => {
 			gcget("stu-hmwk", reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((hmwkData) => {
-				exmData.splice(exmData.length, 0, ...hmwkData.data.list);
-				selected.exmList = exmData;
+				selected.exmList.splice(selected.exmList.length, 0, ...hmwkData.data.list);
 				selected.exmList.student = selected.student;
 				exmListDisp();
 				p();
@@ -190,9 +249,14 @@ document.addEventListener("readystatechange", function () {
 		spinner = document.querySelector("#load-spinner");
 		stuDet = document.querySelector("#list-student");
 		exmDet = document.querySelector("#list-exam");
+		picDet = document.querySelector("#list-exmpic");
 		viewTabs = Array.from(document.querySelectorAll(".fulltab > div"));
 		sidebar = Array.from(document.querySelectorAll(".sidebar li"));
+		bottomBtns = Array.from(document.querySelectorAll(".bottom-btns img"));
 		fullTab = document.querySelector(".interface");
+		popup.base = document.querySelector(".popup");
+		popup.back = document.querySelector(".popup-background");
+		popup.windows = Array.from(document.querySelectorAll(".popup-window"));
 		sidebar.forEach((e) => {
 			e.addEventListener("click", function () {
 				sidebar.forEach((e)=>{e.className=""});
@@ -207,8 +271,22 @@ document.addEventListener("readystatechange", function () {
 					.catch((error)=>{spinner.className = "fail"; console.error(error.stack)});
 			});
 		});
-		tabResizer();
 		addEventListener("resize", tabResizer);
 		sidebar[0].click();
+		bottomBtns[1].onpointerup = function () {
+			popup.base.title = "active";
+			switchPopup(0);
+			spinner.className = "going";
+			new Promise(selExmDisp).catch(promiseError).then(()=>{spinner.className = ""});
+		};
+		popup.back.onclick = function () {
+			popup.base.title = "";
+			switchPopup(-1);
+		};
+		popup.windows.forEach((e) => {
+			e.titleEl = e.children[0].children[0];
+			e.winEl = e.children[1];
+		});
+		tabResizer();
 	};
 });

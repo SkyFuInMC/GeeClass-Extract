@@ -106,11 +106,29 @@ var gcget = function (usage, tmp) {
 		// JSON APIs
 		case "stu-list": {path = "so-learning/api/learning/clzss-student-list?clzssId=${c}&gradeId=${g}&schoolId=${s}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
 		case "student-know": {path = "so-learning/api/learning/student-academic-records?clzssId=${c}&gradeId=${g}&schoolId=${s}&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
-		case "stu-exam": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=0&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=20&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
-		case "stu-hmwk": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=1&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=20&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
+		case "stu-exam": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=0&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=2000&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
+		case "stu-hmwk": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=1&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=2000&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
 		case "stu-getonewrong": {path = "so-analysis/api/question/student-question-list?clzssId=${c}&examId=${ex}&gradeBaseId=${gb}&gradeId=${g}&maxScoreRate=1&minScoreRate=0&schoolId=${s}&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
+		case "stu-getquizright": {path = "so-question/api/question/answer/paperQuestionAnalysis?paperQuestionIds=${pq}&schoolId=3633" ;break;};
 		// Blob APIs
 		case "stu-blobonewrong": {path = "so-analysis/api/download/download-student-wrong-question?schoolId=3633&exportConfig=11&gradeId=9224&clzssId=100939&gradeBaseId=6&studentId=3380901&subjectId=149795&subjectBaseId=1&knowledgeIds=&examIds=731353&orderType=1&questionType=&minScoreRate=&maxScoreRate=1&accountId=2656889&year=2019&accessToken=30f037f0a307bf329754adf53ed27179&client_value=14";break;};
 	};
 	return (fetch(wAlter("https://teacher.fclassroom.com/" + path, tmp), {"credentials":"include","headers":{"accept":"application/json, text/plain, */*","authorization":"Bearer " + tmp.t,"client-value": tmp.i},"referrer":"https://teacher.fclassroom.com/learnTrack/main.html","referrerPolicy":"no-referrer-when-downgrade","method":"GET","mode":"cors"}));
+};
+
+var gcImgGet = function (path, type) {
+	head = "https://teacher.fclassroom.com/";
+	switch (type.toLowerCase) {
+		case "answer": {head = "https://image.fclassroom.com/";break;};
+		case "question": {
+			head = "https://teacher.fclassroom.com/q_file/";
+			path = path.replace(".txt", ".files/image001.jpg");
+			break;
+		};
+	};
+	return fetch(head + path, {"credentials":"include","headers":{"accept":"image/webp,image/apng,image/*,*/*;q=0.8","sec-fetch-mode":"no-cors","sec-fetch-site":"same-site"},"referrer":"https://teacher.fclassroom.com/learnTrack/main.html","referrerPolicy":"no-referrer-when-downgrade","method":"GET","mode":"cors"});
+};
+
+var gcQiPath = function (path) {
+	return ("https://teacher.fclassroom.com/q_file/" + path.replace(".txt", ".files/image001.jpg").replace(".htm", ".files/image001.jpg").replace(".docx", ".files/image001.jpg"));
 };

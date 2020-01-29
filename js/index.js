@@ -1,6 +1,48 @@
 "use strict";
 "unsafe-inline";
 
+var _ecma6_ = false;
+if (self.Promise) {_ecma6_ = true};
+var TabSearch = function (apply = location.search) {
+	let text = apply.replace("?", "");
+	console.log(text);
+	let form = [];
+	let output = {};
+	form = text.split("&");
+	console.warn(form);
+	let count = 0;
+	while (count < form.length) {
+		form[count] = form[count].split("=");
+		while (form[count].length > 2) {
+			form[count].pop();
+		}
+		console.log("[elsl.ext.tab.search] Assigned item " + form[count][0] + " with value " + decodeURI(form[count][1]) + " inside table.");
+		count++;
+	}
+	console.warn(form);
+	if (_ecma6_) {
+		count = 0;
+		while (count < form.length) {
+			output[decodeURI(form[count][0])] = decodeURI(form[count][1]);
+			count++;
+		}
+	}
+	else {
+		console.error("[elsl.ext.tab.search] Does not support ECMA6.");
+		output = new Error();
+		output.message = "[elsl.ext.tab.search] Unsupported browser.";
+	}
+	console.warn(output);
+	return output;
+};
+var genRand = function (length) {
+	let r = "";
+	let m = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+	for (let c = 0; c < length; c ++) {
+		r += m[Math.floor(Math.random()*m.length)];
+	};
+	return r;
+};
 var promiseError = function (o) {
 	spinner.className = "fail";
 	if (!(o)) {
@@ -16,7 +58,7 @@ var refuse = function (text = "No information provided.") {
 var hints = {};
 hints.title = ["请选择账户", "请选择班级", "请选择学生再继续操作", "学生错题", "学生分析"];
 
-var sidebar, views, viewAction, viewTabs, accounts, bottomBtns; //arrays
+var sidebar, views, viewAction, viewTabs, accounts, bottomBtns, gcePrintBtns, printChannels = []; //arrays
 var title, titleHint, fullTab, accountDet, classDet, stuDet, exmDet, picDet, spinner;//elements
 var tabActive, selected = {}, reqArgs = {}, popup = {};//root properties
 
@@ -107,7 +149,7 @@ var selExmDisp = function (p, r) {
 						qImg = '<div id="load-spinner" class="fail"></div>';
 					};
 					let newEl = document.createElement("tr");
-					newEl.innerHTML = wAlter('<td title="${qx}">${bi}、${si}</td><td>${as}/${qs}</td><td title="${ai}">${ha}</td><td>${qi}</td><td>${nt}</td><td>无</td>', {
+					newEl.innerHTML = wAlter('<td title="${qx}">${si}</td><td>${as}/${qs}</td><td title="${ai}">${ha}</td><td>${qi}</td><td>${nt}</td><td>无</td>', {
 						bi: bigIdx, si: smallIdx, as: ags, qs: fqs, ai: ansImg, ha: [rans, "有"][hasAns], qi: qImg, qx: qid, nt: ['<div id="load-spinner" class="fail"></div>', '<div id="load-spinner" class="going"></div>'][hasAns]
 					});
 					if (hasAns == 1) {
@@ -280,9 +322,10 @@ document.addEventListener("readystatechange", function () {
 		stuDet = document.querySelector("#list-student");
 		exmDet = document.querySelector("#list-exam");
 		picDet = document.querySelector("#list-exmpic");
+		gcePrintBtns = Array.from(document.querySelectorAll(".link-print"));
 		viewTabs = Array.from(document.querySelectorAll(".fulltab > div"));
 		sidebar = Array.from(document.querySelectorAll(".sidebar li"));
-		bottomBtns = Array.from(document.querySelectorAll(".bottom-btns img"));
+		bottomBtns = Array.from(document.querySelector(".bottom-btns").children);
 		fullTab = document.querySelector(".interface");
 		popup.base = document.querySelector(".popup");
 		popup.back = document.querySelector(".popup-background");
@@ -317,6 +360,43 @@ document.addEventListener("readystatechange", function () {
 			e.titleEl = e.children[0].children[0];
 			e.winEl = e.children[1];
 		});
+		gcePrintBtns.forEach((e) => {
+			let tpath = "print.htm?type=";
+			if (e.id == "link-selprint") {
+				tpath += "selected";
+			} else if (e.id == "link-allprint") {
+				tpath += "all";
+			};
+			e.onclick = function () {
+				this.href = tpath + "&channel=" + genRand(32);
+				let nbc = new BroadcastChannel((TabSearch(e.href.split("?")[1])).channel);
+				nbc.addEventListener("message", function (event) {
+					if (event.data.stage == "LOADED") {
+						event.target.postMessage({stage: "SENDING", reqArgs: reqArgs, selected: selected, form: picDet.innerHTML});
+						event.target.postMessage({stage: "DATA_OK"});
+					};
+					console.log(event);
+				});
+				printChannels.push(nbc);
+			};
+			e.href = tpath + "&channel=" + genRand(32);
+		});
+		bottomBtns[0].onpointerup = function () {
+			let tpath = "print.htm?type=all";
+			this.onclick = function () {
+				this.href = tpath + "&channel=" + genRand(32);
+				let nbc = new BroadcastChannel((TabSearch(this.href.split("?")[1])).channel);
+				nbc.addEventListener("message", function (event) {
+					if (event.data.stage == "LOADED") {
+						event.target.postMessage({stage: "SENDING", reqArgs: reqArgs, selected: selected, form: picDet.innerHTML});
+						event.target.postMessage({stage: "DATA_OK"});
+					};
+					console.log(event);
+				});
+				printChannels.push(nbc);
+			};
+			this.href = tpath + "&channel=" + genRand(32);
+		};
 		tabResizer();
 	};
 });

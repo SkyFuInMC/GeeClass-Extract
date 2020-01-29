@@ -1,0 +1,10 @@
+body {
+	overflow-y: scroll !important;
+}
+td {
+	text-align: left;
+	vertical-align: top;
+}
+td img {
+	max-height: 600px;
+}

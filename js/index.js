@@ -254,6 +254,7 @@ viewAction = [function (p, r) {
 					selected.subject = info[3].title;
 					selected.year = info[4].title;
 					selected.school = info[5].title;
+					selected.subjectName = info[3].innerText;
 					reqArgs.g = selected.grade.split(",")[0];
 					reqArgs.gb = selected.grade.split(",")[1];
 					reqArgs.c = selected.class;

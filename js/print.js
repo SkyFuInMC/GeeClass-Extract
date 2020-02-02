@@ -155,14 +155,14 @@ document.addEventListener("readystatechange", function () {
 						if (searchDet.type == "selected") {
 							let selected = data.data.selected;
 							self.picDet.innerHTML = data.data.form;
-							document.title = "极课提取 - " + selected.studentName + "的错题（" + selected.exmName + "）[" + normalDate() + "]";
+							document.title = "极课提取 - " + selected.studentName + "的" + selected.subjectName + "错题（" + selected.exmName + "）[" + normalDate() + "]";
 						};
 						break;
 					};
 					case "DATA_OK": {
 						if (searchDet.type == "all") {
 							console.log("完全提取");
-							document.title = "极课提取 - " + selected.studentName + "的全部错题[" + normalDate() + "]";
+							document.title = "极课提取 - " + selected.studentName + "的全部" + selected.subjectName + "错题[" + normalDate() + "]";
 							getAll();
 						} else {
 							cleanUp();

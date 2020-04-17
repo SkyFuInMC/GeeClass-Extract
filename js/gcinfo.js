@@ -106,8 +106,8 @@ var gcget = function (usage, tmp) {
 		// JSON APIs
 		case "stu-list": {path = "so-learning/api/learning/clzss-student-list?clzssId=${c}&gradeId=${g}&schoolId=${s}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
 		case "student-know": {path = "so-learning/api/learning/student-academic-records?clzssId=${c}&gradeId=${g}&schoolId=${s}&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
-		case "stu-exam": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=0&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=2000&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
-		case "stu-hmwk": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=1&gradeBaseId=${gb}&gradeId=${g}&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=2000&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
+		case "stu-exam": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=0&gradeBaseId=${gb}&gradeId=${g}&markRuleStatus=0&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=511&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
+		case "stu-hmwk": {path = "so-learning/api/learning/student-exam-page?clzssId=${c}&examType=1&gradeBaseId=${gb}&gradeId=${g}&markRuleStatus=0&orderColumn=1&orderType=2&pageNum=${pn}&pageSize=511&schoolId=${s}&specialEnglishStatus=0&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
 		case "stu-getonewrong": {path = "so-analysis/api/question/student-question-list?clzssId=${c}&examId=${ex}&gradeBaseId=${gb}&gradeId=${g}&maxScoreRate=1&minScoreRate=0&schoolId=${s}&studentId=${st}&subjectBaseId=${bb}&subjectId=${b}&year=${y}";break;};
 		case "stu-getquizright": {path = "so-question/api/question/answer/paperQuestionAnalysis?paperQuestionIds=${pq}&schoolId={s}" ;break;};
 		// Blob APIs

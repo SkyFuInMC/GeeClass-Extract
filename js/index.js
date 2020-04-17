@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 "unsafe-inline";
 
 var _ecma6_ = false;
@@ -294,10 +294,10 @@ viewAction = [function (p, r) {
 	if (selected.student != selected.exmList.student) {
 		selected.exmList = [];
 		gcget("stu-exam", reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((examData) => {
-			selected.exmList.splice(selected.exmList.length, 0, ...examData.data.list);
+			if(examData.data){selected.exmList.splice(selected.exmList.length, 0, ...examData.data.list);};
 		}).then(() => {
 			gcget("stu-hmwk", reqArgs).catch(promiseError).then((req)=>{return req.json()}).catch(promiseError).then((hmwkData) => {
-				selected.exmList.splice(selected.exmList.length, 0, ...hmwkData.data.list);
+				if(hmwkData.data){selected.exmList.splice(selected.exmList.length, 0, ...hmwkData.data.list);};
 				selected.exmList.student = selected.student;
 				exmListDisp();
 				p();
@@ -347,8 +347,9 @@ document.addEventListener("readystatechange", function () {
 		});
 		addEventListener("resize", tabResizer);
 		sidebar[0].click();
-		bottomBtns[1].onpointerup = function () {
+		bottomBtns[1].onclick = function () {
 			popup.base.title = "active";
+			debugger;
 			switchPopup(0);
 			spinner.className = "going";
 			new Promise(selExmDisp).catch(promiseError).then(()=>{spinner.className = ""});

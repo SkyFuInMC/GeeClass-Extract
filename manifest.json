@@ -1,7 +1,7 @@
-{
+﻿{
 	"name": "GeeClass Extractor",
 	"short_name": "GCExtractor",
-	"version": "0.1",
+	"version": "0.1.2",
 	"manifest_version": 2,
 	"description": "极课提取器，尝试提取极课所能提取到的信息，包括学校、年级、班级、学生和各科错题等……",
 	"icons": {
